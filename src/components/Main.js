@@ -1,0 +1,105 @@
+import React, {Component} from "react";
+import './main.css'
+import { FaPlus } from 'react-icons/fa'
+import { FaEdit, FaWindowClose } from "react-icons/fa";
+
+
+export default class Main extends Component {
+  state = {
+    novaTarefa: '',
+    tarefas: []
+
+  }
+
+  handleSubmit = (evento) => {
+    evento.preventDefault()
+    const {tarefas} = this.state
+    let {novaTarefa} = this.state
+    novaTarefa = novaTarefa.trim()
+
+    if (tarefas.indexOf(novaTarefa) != -1) return
+
+    const novasTarefas = [...tarefas]
+
+    this.setState({
+      tarefas: [...novasTarefas, novaTarefa],
+      novaTarefa: ''
+    })
+
+    if (novaTarefa === '') {
+      return this.handleDelete(),
+      this.setState ({
+        tarefas: [...novasTarefas]
+
+      })
+    }
+  }
+
+
+  handleChange = (evento) => {
+    this.setState ({
+      novaTarefa: evento.target.value
+    })
+  }
+
+  handleEdit = (e, index) => {
+
+  }
+
+  handleDelete = (e, index) => {
+    const {tarefas} = this.state
+    const novasTarefas = [...tarefas]
+    novasTarefas.splice(index, 1)
+
+    this.setState ({
+      tarefas: [...novasTarefas]
+
+    })
+  }
+
+
+  render () {
+
+   const {novaTarefa, tarefas} = this.state
+
+    return (
+      <div className="main">
+        <h1>Lista de tarefas</h1>
+
+      <form onSubmit={this.handleSubmit} action="#" className="form">
+
+        <input
+          type="text"
+          onChange={this.handleChange}
+          value={novaTarefa}
+        />
+
+        <button type="submit"> <FaPlus/> </button>
+      </form>
+
+
+      <ul className="tarefas">
+          {tarefas.map((tarefa, index) => (
+            <li key={tarefa}>
+              {tarefa}
+              <span>
+
+                <FaEdit
+                  onClick={(e) => this.handleEdit(e, index)}
+                  className="edit"
+                />
+
+                <FaWindowClose
+                  onClick={(e) => this.handleDelete(e, index)}
+                  className="delete"
+                />
+
+              </span>
+            </li>
+          ))}
+      </ul>
+
+      </div>
+    )
+  }
+}
